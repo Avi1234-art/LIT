@@ -6,36 +6,34 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/60 border-b border-slate-800/60">
+    <nav className="fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="text-xl font-serif font-semibold text-slate-100 tracking-wide group-hover:text-white transition-colors">
-            RoomieMatch
-          </span>
+        <Link to="/" className="text-lg font-serif font-semibold text-slate-300 hover:text-slate-100 transition-colors">
+          RoomieMatch
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link to="/" className="text-sm font-sans font-light text-slate-400 hover:text-slate-200 transition-colors">
+        <div className="hidden md:flex items-center gap-2">
+          <Link to="/" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Home
           </Link>
-          <Link to="/questionnaire" className="text-sm font-sans font-light text-slate-400 hover:text-slate-200 transition-colors">
+          <Link to="/questionnaire" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Find Roommates
           </Link>
-          <Link to="/landlord" className="text-sm font-sans font-light text-slate-400 hover:text-slate-200 transition-colors">
+          <Link to="/landlord" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Landlord Portal
           </Link>
-          <Link to="/reviews" className="text-sm font-sans font-light text-slate-400 hover:text-slate-200 transition-colors">
+          <Link to="/reviews" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Reviews
           </Link>
         </div>
 
         {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center">
           <Link
             to="/questionnaire"
-            className="px-5 py-2 rounded-full border border-slate-600 text-slate-200 text-sm font-sans font-medium hover:bg-slate-800 hover:border-slate-500 transition-all"
+            className="px-5 py-1.5 rounded-full border border-slate-700 text-slate-300 text-sm font-sans font-medium hover:bg-white/[0.06] hover:border-slate-500 transition-all"
           >
             Get Started
           </Link>
@@ -70,17 +68,17 @@ export function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-black/95 backdrop-blur-md border-b border-slate-800/60"
+            className="md:hidden overflow-hidden bg-black/90 backdrop-blur-md"
           >
-            <div className="px-6 py-4 flex flex-col gap-3">
-              <Link onClick={() => setMobileOpen(false)} to="/" className="text-sm font-sans font-light text-slate-400 py-2">Home</Link>
-              <Link onClick={() => setMobileOpen(false)} to="/questionnaire" className="text-sm font-sans font-light text-slate-400 py-2">Find Roommates</Link>
-              <Link onClick={() => setMobileOpen(false)} to="/landlord" className="text-sm font-sans font-light text-slate-400 py-2">Landlord Portal</Link>
-              <Link onClick={() => setMobileOpen(false)} to="/reviews" className="text-sm font-sans font-light text-slate-400 py-2">Reviews</Link>
+            <div className="px-6 py-4 flex flex-col gap-2">
+              <Link onClick={() => setMobileOpen(false)} to="/" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Home</Link>
+              <Link onClick={() => setMobileOpen(false)} to="/questionnaire" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Find Roommates</Link>
+              <Link onClick={() => setMobileOpen(false)} to="/landlord" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Landlord Portal</Link>
+              <Link onClick={() => setMobileOpen(false)} to="/reviews" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Reviews</Link>
               <Link
                 onClick={() => setMobileOpen(false)}
                 to="/questionnaire"
-                className="mt-2 px-5 py-2.5 rounded-full border border-slate-600 text-slate-200 text-sm font-sans font-medium text-center"
+                className="mt-2 px-5 py-2 rounded-full border border-slate-700 text-slate-300 text-sm font-sans font-medium text-center"
               >
                 Get Started
               </Link>

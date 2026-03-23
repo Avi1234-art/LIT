@@ -19,16 +19,13 @@ function RevealText({
       {text.split(' ').map((word, i) => (
         <motion.span
           key={i}
-          className="inline-block mr-[0.25em] hover:text-slate-200 hover:-translate-y-0.5 transition-all duration-300 cursor-default"
-          initial={{ opacity: 0, y: 30, filter: 'blur(10px)', scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }}
+          className="inline-block mr-[0.25em] cursor-default"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{
             delay: baseDelay + i * stagger,
-            duration: 0.8,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          }}
-          whileHover={{
-            textShadow: '0 0 20px rgba(203, 213, 225, 0.5)',
+            duration: 0.6,
+            ease: 'easeOut',
           }}
         >
           {word}
