@@ -27,6 +27,9 @@ export function Navbar() {
           <Link to="/reviews" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Reviews
           </Link>
+          <Link to="/demo" className="px-4 py-1.5 rounded-full text-sm font-sans font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/[0.08] transition-all" style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}>
+            Demo
+          </Link>
         </div>
 
         {/* Desktop CTA */}
@@ -75,6 +78,7 @@ export function Navbar() {
               <Link onClick={() => setMobileOpen(false)} to="/questionnaire" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Find Roommates</Link>
               <Link onClick={() => setMobileOpen(false)} to="/landlord" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Landlord Portal</Link>
               <Link onClick={() => setMobileOpen(false)} to="/reviews" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Reviews</Link>
+              <Link onClick={() => setMobileOpen(false)} to="/demo" className="px-4 py-2 rounded-full text-sm font-sans font-medium text-emerald-400 hover:bg-emerald-500/[0.08]" style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}>Demo</Link>
               <Link
                 onClick={() => setMobileOpen(false)}
                 to="/questionnaire"
