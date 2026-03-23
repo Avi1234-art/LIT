@@ -355,7 +355,7 @@ export default function Questionnaire() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <Card className="rounded-3xl overflow-hidden">
+          <Card data-demo="form-card" className="rounded-3xl overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -473,6 +473,7 @@ export default function Questionnaire() {
                           <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">$</span>
                             <Input
+                              id="budgetMin"
                               type="number"
                               placeholder="Min (e.g. 600)"
                               value={formData.budgetMin}

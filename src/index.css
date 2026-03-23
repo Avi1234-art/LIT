@@ -67,3 +67,9 @@ body {
   height: 40px;
   border: 1px solid rgba(203, 213, 225, 0.2);
 }
+
+/* Demo border gradient animation */
+@keyframes demo-border-slide {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
