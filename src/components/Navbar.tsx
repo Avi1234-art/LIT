@@ -24,6 +24,9 @@ export function Navbar() {
           <Link to="/questionnaire" data-demo="nav-find-roommates" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Find Roommates
           </Link>
+          <Link to="/how-it-works" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
+            How It Works
+          </Link>
           <Link to="/landlord" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Landlord Portal
           </Link>
@@ -83,6 +86,7 @@ export function Navbar() {
             <div className="px-6 py-4 flex flex-col gap-2">
               <Link onClick={() => setMobileOpen(false)} to="/" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Home</Link>
               <Link onClick={() => setMobileOpen(false)} to="/questionnaire" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Find Roommates</Link>
+              <Link onClick={() => setMobileOpen(false)} to="/how-it-works" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">How It Works</Link>
               <Link onClick={() => setMobileOpen(false)} to="/landlord" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Landlord Portal</Link>
               <Link onClick={() => setMobileOpen(false)} to="/reviews" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Reviews</Link>
               <button onClick={() => { setMobileOpen(false); navigate('/'); setTimeout(() => startDemo(), 100) }} className="px-4 py-2 rounded-full text-sm font-sans font-medium text-emerald-400 hover:bg-emerald-500/[0.08] text-left cursor-pointer" style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}>Demo</button>
