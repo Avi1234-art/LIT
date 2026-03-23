@@ -49,10 +49,7 @@ export function DemoOverlay() {
   const [showProcessing, setShowProcessing] = useState(false)
   const [showScore, setShowScore] = useState(false)
   const [scoreValue, setScoreValue] = useState(0)
-  const [showBars, setShowBars] = useState(false)
-  const [showProfiles, setShowProfiles] = useState(false)
-  const [showTags, setShowTags] = useState(false)
-  const [showInsight, setShowInsight] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
   const [showMap, setShowMap] = useState(false)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
 
@@ -378,15 +375,11 @@ export function DemoOverlay() {
         await wait(180)
       }
 
-      await wait(1000)
-      setShowBars(true)
+      await wait(1200)
+      if (abortRef.current) return
+      setShowDetails(true)
       await wait(2500)
-      setShowProfiles(true)
-      await wait(1800)
-      setShowTags(true)
-      await wait(1500)
-      setShowInsight(true)
-      await wait(1800)
+      if (abortRef.current) return
       setShowMap(true)
       setDemoPhase('results')
     }
@@ -400,10 +393,7 @@ export function DemoOverlay() {
       setShowProcessing(false)
       setShowScore(false)
       setScoreValue(0)
-      setShowBars(false)
-      setShowProfiles(false)
-      setShowTags(false)
-      setShowInsight(false)
+      setShowDetails(false)
       setShowMap(false)
     }
   }, [isDemoActive])
@@ -419,10 +409,7 @@ export function DemoOverlay() {
     setShowProcessing(false)
     setShowScore(false)
     setScoreValue(0)
-    setShowBars(false)
-    setShowProfiles(false)
-    setShowTags(false)
-    setShowInsight(false)
+    setShowDetails(false)
     setShowMap(false)
     scriptRunningRef.current = false
     setTimeout(() => { abortRef.current = false; setDemoPhase('landing'); navigate('/') }, 100)
@@ -538,18 +525,12 @@ export function DemoOverlay() {
             <div className="min-h-screen flex flex-col md:flex-row items-start justify-center pt-28 pb-20 px-6 gap-8">
 
               {/* ── Left column: score + details ── */}
-              <motion.div
-                layout
-                className="flex flex-col items-center w-full"
+              <div
+                className="flex flex-col items-center w-full transition-all duration-700 ease-in-out"
                 style={{ maxWidth: showMap ? '520px' : '600px' }}
-                transition={{ duration: 0.6, ease: 'easeInOut' }}
               >
                 {/* Score Ring */}
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="relative mb-14"
-                >
+                <div className="relative mb-14">
                   <svg width="140" height="140" className="-rotate-90">
                     <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(148,163,184,0.1)" strokeWidth="6" />
                     <motion.circle
@@ -571,46 +552,37 @@ export function DemoOverlay() {
                     <span className="text-[10px] font-sans text-slate-500 uppercase tracking-wider">Match</span>
                   </div>
                   {scoreValue >= 92 && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap"
-                    >
+                    <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
                       <span className="text-sm font-serif font-semibold text-emerald-400">Excellent Match</span>
-                    </motion.div>
+                    </div>
                   )}
-                </motion.div>
+                </div>
 
-                {/* Compatibility Bars */}
-                <AnimatePresence>
-                  {showBars && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md mt-6 space-y-3">
-                      {BARS.map((bar, i) => (
-                        <motion.div key={bar.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }}>
+                {/* Everything below appears at once — no bounce */}
+                {showDetails && (
+                  <div className="w-full flex flex-col items-center animate-[fadeIn_0.5s_ease-out]">
+                    {/* Compatibility Bars */}
+                    <div className="w-full max-w-md mt-6 space-y-3">
+                      {BARS.map((bar) => (
+                        <div key={bar.label}>
                           <div className="flex justify-between text-xs font-sans mb-1">
                             <span className="text-slate-400">{bar.label}</span>
                             <span className="text-slate-500">{bar.value}%</span>
                           </div>
                           <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                            <motion.div
-                              className={`h-full rounded-full ${bar.color}`}
-                              initial={{ width: 0 }}
-                              animate={{ width: `${bar.value}%` }}
-                              transition={{ delay: i * 0.15 + 0.2, duration: 0.6, ease: 'easeOut' }}
+                            <div
+                              className={`h-full rounded-full ${bar.color} transition-all duration-700 ease-out`}
+                              style={{ width: `${bar.value}%` }}
                             />
                           </div>
-                        </motion.div>
+                        </div>
                       ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    </div>
 
-                {/* Profile Cards */}
-                <AnimatePresence>
-                  {showProfiles && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full max-w-lg mt-12">
+                    {/* Profile Cards */}
+                    <div className="w-full max-w-lg mt-12">
                       <div className="grid grid-cols-2 gap-6">
-                        <motion.div initial={{ x: -60, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }} className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60">
+                        <div className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60">
                           <div className="flex items-center gap-3 mb-3">
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-200 font-serif font-semibold text-sm">S</div>
                             <div>
@@ -621,8 +593,8 @@ export function DemoOverlay() {
                           <div className="space-y-1 text-xs font-sans text-slate-500">
                             <p>ENFJ</p><p>11 PM – 7 AM</p><p>$800–$1,000/mo</p><p>Weekly cleaner</p><p>Studies at home</p>
                           </div>
-                        </motion.div>
-                        <motion.div initial={{ x: 60, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.5 }} className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60">
+                        </div>
+                        <div className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60">
                           <div className="flex items-center gap-3 mb-3">
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-200 font-serif font-semibold text-sm">A</div>
                             <div>
@@ -633,29 +605,21 @@ export function DemoOverlay() {
                           <div className="space-y-1 text-xs font-sans text-slate-500">
                             <p>ENTJ</p><p>11 PM – 7 AM</p><p>$750–$950/mo</p><p>Tidy</p><p>Studies at home</p>
                           </div>
-                        </motion.div>
+                        </div>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    </div>
 
-                {/* Match tags */}
-                <AnimatePresence>
-                  {showTags && (
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-wrap gap-2 justify-center mt-6 max-w-lg">
-                      {MATCH_TAGS.map((tag, i) => (
-                        <motion.span key={tag} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.15 }} className="px-3 py-1 rounded-full bg-white/[0.04] text-slate-400 text-xs font-sans border border-slate-700/60">
+                    {/* Match tags */}
+                    <div className="flex flex-wrap gap-2 justify-center mt-6 max-w-lg">
+                      {MATCH_TAGS.map((tag) => (
+                        <span key={tag} className="px-3 py-1 rounded-full bg-white/[0.04] text-slate-400 text-xs font-sans border border-slate-700/60">
                           &#10003; {tag}
-                        </motion.span>
+                        </span>
                       ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    </div>
 
-                {/* AI Insight */}
-                <AnimatePresence>
-                  {showInsight && (
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 w-full max-w-md">
+                    {/* AI Insight */}
+                    <div className="mt-8 w-full max-w-md">
                       <div className="rounded-xl border border-slate-800/60 bg-white/[0.03] p-5">
                         <p className="text-xs font-sans text-slate-500 uppercase tracking-wider mb-2">AI Insight</p>
                         <p className="text-sm font-sans text-slate-300 leading-relaxed italic">
@@ -673,21 +637,21 @@ export function DemoOverlay() {
                           Try It Yourself &rarr;
                         </button>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                    </div>
+                  </div>
+                )}
+              </div>
 
-              {/* ── Right column: Map (slides in) ── */}
+              {/* ── Right column: Map (slides in — only dynamic element) ── */}
               <AnimatePresence>
                 {showMap && (
                   <motion.div
-                    initial={{ opacity: 0, x: 80 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, x: 80, width: 0 }}
+                    animate={{ opacity: 1, x: 0, width: 380 }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
-                    className="w-full md:w-[380px] shrink-0 md:sticky md:top-28"
+                    className="shrink-0 md:sticky md:top-28 overflow-hidden"
                   >
-                    <div className="rounded-xl border border-slate-800/60 bg-white/[0.03] overflow-hidden">
+                    <div className="w-[380px] rounded-xl border border-slate-800/60 bg-white/[0.03] overflow-hidden">
                       {/* Real map — Western University, London ON */}
                       <div className="relative h-64 overflow-hidden rounded-t-xl">
                         <iframe
@@ -723,11 +687,9 @@ export function DemoOverlay() {
                         </div>
                         <div className="flex items-center gap-2 pt-1">
                           <div className="h-1.5 flex-1 rounded-full bg-slate-800 overflow-hidden">
-                            <motion.div
-                              className="h-full rounded-full bg-emerald-500/60"
-                              initial={{ width: 0 }}
-                              animate={{ width: '85%' }}
-                              transition={{ duration: 0.8, ease: 'easeOut' }}
+                            <div
+                              className="h-full rounded-full bg-emerald-500/60 transition-all duration-700 ease-out"
+                              style={{ width: '85%' }}
                             />
                           </div>
                           <span className="text-[10px] font-sans text-slate-500 shrink-0">85% budget overlap</span>

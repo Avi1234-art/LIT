@@ -68,6 +68,12 @@ body {
   border: 1px solid rgba(203, 213, 225, 0.2);
 }
 
+/* Fade in for demo results */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Demo border gradient animation */
 @keyframes demo-border-slide {
   0% { background-position: 0% 50%; }
