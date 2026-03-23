@@ -155,6 +155,14 @@ export default function Questionnaire() {
   }
 
   const handleSubmit = () => {
+    const incomplete = getIncompleteSteps()
+    if (incomplete.length > 0) {
+      setValidationErrors(incomplete.map((i) => i.label))
+      // Jump to first incomplete step
+      setCurrentStep(incomplete[0].step)
+      return
+    }
+    setValidationErrors([])
     setIsSubmitting(true)
     // Save form data to localStorage for the results page
     localStorage.setItem('roomiematch-profile', JSON.stringify(formData))
@@ -164,33 +172,32 @@ export default function Questionnaire() {
     }, 2000)
   }
 
-  const isStepValid = () => {
-    switch (currentStep) {
-      case 0:
-        return formData.name.trim() !== '' && formData.age !== '' && formData.gender !== ''
-      case 1:
-        return formData.budgetMin !== '' && formData.leaseLength !== ''
-      case 2:
-        return formData.sleepTime !== '' && formData.cleaningFrequency !== ''
-      case 3:
-        return formData.guestFrequency !== '' && formData.studyLocation !== ''
-      case 4:
-        return formData.mbtiE !== '' && formData.mbtiS !== '' && formData.mbtiT !== '' && formData.mbtiJ !== ''
-      case 5:
-        return formData.universityEmail.trim() !== '' && formData.agreeToTerms
-      default:
-        return true
-    }
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+
+  const getIncompleteSteps = (): { step: number; label: string }[] => {
+    const missing: { step: number; label: string }[] = []
+    if (!formData.name.trim() || !formData.age || !formData.gender)
+      missing.push({ step: 0, label: 'About You — name, age, and gender required' })
+    if (!formData.budgetMin)
+      missing.push({ step: 1, label: 'Housing — minimum budget required' })
+    if (!formData.sleepTime || !formData.cleaningFrequency)
+      missing.push({ step: 2, label: 'Lifestyle — sleep schedule and cleaning habits required' })
+    if (!formData.guestFrequency || !formData.studyLocation)
+      missing.push({ step: 3, label: 'Social — guest frequency and study location required' })
+    if (!formData.mbtiE || !formData.mbtiS || !formData.mbtiT || !formData.mbtiJ)
+      missing.push({ step: 4, label: 'Personality — complete all 4 MBTI dimensions' })
+    if (!formData.universityEmail.trim() || !formData.agreeToTerms)
+      missing.push({ step: 5, label: 'Verification — email and terms agreement required' })
+    return missing
   }
 
-  /* ── Option card helper ── */
+  /* ── Option card helper (no motion to avoid re-render flicker) ── */
   function OptionCard({
     value,
     currentValue,
     label,
     description,
     onSelect,
-    index = 0,
   }: {
     value: string
     currentValue: string
@@ -200,7 +207,7 @@ export default function Questionnaire() {
     index?: number
   }) {
     return (
-      <motion.div
+      <div
         className={cn(
           'flex items-start gap-3 rounded-xl border p-4 cursor-pointer transition-all duration-200',
           currentValue === value
@@ -208,8 +215,6 @@ export default function Questionnaire() {
             : 'border-slate-800/60 hover:border-slate-700 hover:bg-white/[0.03]',
         )}
         onClick={onSelect}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { delay: 0.05 * index } }}
       >
         <div
           className={cn(
@@ -223,7 +228,7 @@ export default function Questionnaire() {
           <p className="text-sm font-sans font-medium text-slate-200">{label}</p>
           {description && <p className="text-xs font-sans text-slate-500 mt-0.5">{description}</p>}
         </div>
-      </motion.div>
+      </div>
     )
   }
 
@@ -296,16 +301,14 @@ export default function Questionnaire() {
                 <button
                   type="button"
                   className={cn(
-                    'w-4 h-4 rounded-full transition-all duration-300 cursor-pointer',
+                    'w-4 h-4 rounded-full transition-all duration-300 cursor-pointer hover:ring-4 hover:ring-slate-400/20',
                     index < currentStep
-                      ? 'bg-slate-300'
+                      ? 'bg-slate-400'
                       : index === currentStep
                         ? 'bg-slate-200 ring-4 ring-slate-200/20'
-                        : 'bg-slate-700',
+                        : 'bg-slate-700 hover:bg-slate-600',
                   )}
-                  onClick={() => {
-                    if (index <= currentStep) setCurrentStep(index)
-                  }}
+                  onClick={() => setCurrentStep(index)}
                 />
                 <span
                   className={cn(
@@ -449,26 +452,26 @@ export default function Questionnaire() {
                       <motion.div variants={fadeIn} className="space-y-2">
                         <Label>Monthly Budget Range (CAD)</Label>
                         <div className="grid grid-cols-2 gap-3">
-                          <Select value={formData.budgetMin} onValueChange={(v) => update('budgetMin', v)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Min" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {['400', '500', '600', '700', '800', '900', '1000'].map((v) => (
-                                <SelectItem key={v} value={v}>${v}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <Select value={formData.budgetMax} onValueChange={(v) => update('budgetMax', v)}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Max" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {['600', '700', '800', '900', '1000', '1200', '1400', '1600', '2000'].map((v) => (
-                                <SelectItem key={v} value={v}>${v}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">$</span>
+                            <Input
+                              type="number"
+                              placeholder="Min (e.g. 600)"
+                              value={formData.budgetMin}
+                              onChange={(e) => update('budgetMin', e.target.value)}
+                              className="pl-7"
+                            />
+                          </div>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">$</span>
+                            <Input
+                              type="number"
+                              placeholder="Max (e.g. 1200)"
+                              value={formData.budgetMax}
+                              onChange={(e) => update('budgetMax', e.target.value)}
+                              className="pl-7"
+                            />
+                          </div>
                         </div>
                       </motion.div>
 
@@ -771,8 +774,8 @@ export default function Questionnaire() {
                             'Drug Use',
                             'Late Parties',
                             'No A/C',
-                          ].map((item, i) => (
-                            <motion.div
+                          ].map((item) => (
+                            <div
                               key={item}
                               className={cn(
                                 'flex items-center gap-2 rounded-xl border p-3 cursor-pointer transition-all duration-200',
@@ -781,15 +784,13 @@ export default function Questionnaire() {
                                   : 'border-slate-800/60 hover:border-slate-700 hover:bg-white/[0.03]',
                               )}
                               onClick={() => toggleDealBreaker(item)}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1, transition: { delay: 0.03 * i } }}
                             >
                               <Checkbox
                                 checked={formData.dealBreakers.includes(item)}
                                 onCheckedChange={() => toggleDealBreaker(item)}
                               />
                               <span className="text-sm font-sans text-slate-300">{item}</span>
-                            </motion.div>
+                            </div>
                           ))}
                         </div>
                       </motion.div>
@@ -970,13 +971,25 @@ export default function Questionnaire() {
               </motion.div>
             </AnimatePresence>
 
+            {/* Validation errors */}
+            {validationErrors.length > 0 && currentStep === steps.length - 1 && (
+              <div className="px-6 pb-2">
+                <div className="rounded-xl border border-red-900/40 bg-red-950/20 p-3 space-y-1">
+                  <p className="text-xs font-sans font-medium text-red-400">Please complete the following:</p>
+                  {validationErrors.map((err, i) => (
+                    <p key={i} className="text-xs font-sans text-red-400/70">• {err}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <CardFooter className="flex justify-between pt-6 pb-6">
               <Button variant="outline" onClick={prevStep} disabled={currentStep === 0} className="rounded-2xl">
                 <ChevronLeft className="h-4 w-4" /> Back
               </Button>
               <Button
                 onClick={currentStep === steps.length - 1 ? handleSubmit : nextStep}
-                disabled={!isStepValid() || isSubmitting}
+                disabled={isSubmitting}
                 className="rounded-2xl"
               >
                 {isSubmitting ? (
