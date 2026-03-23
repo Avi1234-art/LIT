@@ -494,7 +494,7 @@ export default function Questionnaire() {
                         </div>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="lease-section">
                         <Label>Lease Length</Label>
                         <RadioGroup
                           value={formData.leaseLength}
@@ -576,7 +576,7 @@ export default function Questionnaire() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-5">
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="sleep-section">
                         <Label>Sleep Schedule</Label>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="space-y-1">
@@ -608,7 +608,7 @@ export default function Questionnaire() {
                         </div>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="cleaning-section">
                         <Label>Cleaning Habits</Label>
                         <RadioGroup
                           value={formData.cleaningFrequency}
@@ -657,7 +657,7 @@ export default function Questionnaire() {
                         </RadioGroup>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-3">
+                      <motion.div variants={fadeIn} className="space-y-3" data-demo="noise-section">
                         <Label>Noise Tolerance</Label>
                         <div className="flex items-center justify-between text-xs font-sans text-slate-500 px-1">
                           <span>Need silence</span>
@@ -700,7 +700,7 @@ export default function Questionnaire() {
                         />
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="guest-section">
                         <Label>How often do you have guests over?</Label>
                         <RadioGroup
                           value={formData.guestFrequency}
@@ -781,7 +781,7 @@ export default function Questionnaire() {
                         </Select>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="dealbreaker-section">
                         <Label>Deal-breakers (select all that apply)</Label>
                         <div className="grid grid-cols-2 gap-2">
                           {[
@@ -826,7 +826,7 @@ export default function Questionnaire() {
                         Select your preference for each dimension — or take a quick guess
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-6">
+                    <CardContent className="space-y-6" data-demo="mbti-section">
                       <MBTIDimension
                         label="Energy"
                         optionA="E — Extraverted"
@@ -904,7 +904,7 @@ export default function Questionnaire() {
                         </p>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-3">
+                      <motion.div variants={fadeIn} className="space-y-3" data-demo="id-upload-section">
                         <Label>ID Verification</Label>
                         <div
                           className={cn(

@@ -26,13 +26,6 @@ function scrollToElement(selector: string) {
 /* helper: wait */
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-/* animated gradient border style shared across all 4 edges */
-const borderGradient = {
-  background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #34d399, #f59e0b, #ec4899, #3b82f6)',
-  backgroundSize: '200% 100%',
-  animation: 'demo-border-slide 3s linear infinite',
-}
-
 /* compatibility bar data */
 const BARS = [
   { label: 'Sleep Schedule', value: 95, color: 'bg-emerald-500' },
@@ -73,6 +66,7 @@ export function DemoOverlay() {
   const [showProfiles, setShowProfiles] = useState(false)
   const [showTags, setShowTags] = useState(false)
   const [showInsight, setShowInsight] = useState(false)
+  const [showMap, setShowMap] = useState(false)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
 
   const moveCursorTo = useCallback(
@@ -97,7 +91,7 @@ export function DemoOverlay() {
     [],
   )
 
-  /* ─── LANDING PHASE: move cursor to hero CTA "Find My Roommate" ─── */
+  /* ─── LANDING PHASE ─── */
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'landing' || scriptRunningRef.current) return
     if (location.pathname !== '/' && location.pathname !== '/LIT/' && location.pathname !== '/LIT') {
@@ -109,21 +103,17 @@ export function DemoOverlay() {
     abortRef.current = false
 
     const run = async () => {
-      // Wait for landing page to render
       await wait(1500)
       if (abortRef.current) return
 
-      // Show cursor at center first
       setCursorPos({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
       await wait(800)
       if (abortRef.current) return
 
-      // Move to the hero "Find My Roommate" button
       await moveCursorTo('[data-demo="hero-cta"]', 300)
       await wait(800)
       if (abortRef.current) return
 
-      // Click
       const ctaPos = getElementCenter('[data-demo="hero-cta"]')
       if (ctaPos) clickAt(ctaPos)
       await wait(500)
@@ -135,14 +125,10 @@ export function DemoOverlay() {
     }
 
     run()
-
-    return () => {
-      abortRef.current = true
-      scriptRunningRef.current = false
-    }
+    return () => { abortRef.current = true; scriptRunningRef.current = false }
   }, [isDemoActive, demoPhase, location.pathname, navigate, setCursorPos, moveCursorTo, clickAt, setDemoPhase])
 
-  /* ─── NAVIGATING → FORM: wait for questionnaire to mount ─── */
+  /* ─── NAVIGATING → FORM ─── */
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'navigating') return
     if (location.pathname === '/questionnaire' || location.pathname === '/LIT/questionnaire') {
@@ -151,7 +137,7 @@ export function DemoOverlay() {
     }
   }, [isDemoActive, demoPhase, location.pathname, setDemoPhase])
 
-  /* ─── FORM PHASE: auto-fill the actual questionnaire ─── */
+  /* ─── FORM PHASE ─── */
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'form' || scriptRunningRef.current) return
 
@@ -159,214 +145,219 @@ export function DemoOverlay() {
     abortRef.current = false
 
     const run = async () => {
-      const getFormControl = () => {
-        return (window as unknown as { __demoFormControl?: { setField: (f: string, v: unknown) => void; setStep: (s: number) => void; submit: () => void } }).__demoFormControl
-      }
+      const getFC = () =>
+        (window as unknown as { __demoFormControl?: { setField: (f: string, v: unknown) => void; setStep: (s: number) => void; submit: () => void } }).__demoFormControl
 
-      // Wait for form to mount and register
       await wait(800)
       if (abortRef.current) return
+      const fc = getFC()
+      if (!fc) { scriptRunningRef.current = false; return }
 
-      const fc = getFormControl()
-      if (!fc) {
-        scriptRunningRef.current = false
-        return
-      }
-
-      // Scroll to top of form
       window.scrollTo({ top: 0, behavior: 'smooth' })
       await wait(400)
 
       // ── Step 1: About You ──
-      await moveCursorTo('#name', 400)
-      await wait(300)
+      await moveCursorTo('#name', 300)
+      await wait(250)
       const name = 'Sarah M.'
       for (let i = 1; i <= name.length; i++) {
         if (abortRef.current) return
         fc.setField('name', name.slice(0, i))
         await wait(70)
       }
-      await wait(300)
-
-      await moveCursorTo('#age', 300)
       await wait(250)
+
+      await moveCursorTo('#age', 250)
+      await wait(200)
       fc.setField('age', '21')
       if (abortRef.current) return
 
-      await moveCursorTo('#gender', 300)
-      await wait(250)
+      await moveCursorTo('#gender', 250)
+      await wait(200)
       fc.setField('gender', 'female')
       if (abortRef.current) return
 
-      await moveCursorTo('#university', 300)
-      await wait(250)
+      await moveCursorTo('#university', 250)
+      await wait(200)
       fc.setField('university', 'Western University')
       if (abortRef.current) return
 
-      await moveCursorTo('#program', 300)
-      await wait(250)
+      await moveCursorTo('#program', 250)
+      await wait(200)
       fc.setField('program', 'Business')
       if (abortRef.current) return
 
-      await moveCursorTo('#year', 300)
-      await wait(250)
+      await moveCursorTo('#year', 250)
+      await wait(200)
       fc.setField('year', '3')
       if (abortRef.current) return
 
-      // Click Next
-      await wait(400)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(350)
-      const nextPos = getElementCenter('[data-demo="next-btn"]')
-      if (nextPos) clickAt(nextPos)
       await wait(300)
+      await moveCursorTo('[data-demo="next-btn"]', 250)
+      await wait(300)
+      const p = getElementCenter('[data-demo="next-btn"]')
+      if (p) clickAt(p)
+      await wait(250)
       fc.setStep(1)
       if (abortRef.current) return
 
       // ── Step 2: Housing ──
-      await wait(500)
+      await wait(450)
       await moveCursorTo('#budgetMin', 300)
-      await wait(300)
+      await wait(250)
       fc.setField('budgetMin', '800')
-      await wait(350)
-      fc.setField('budgetMax', '1000')
-      await wait(350)
-
-      await moveCursorTo('#moveIn', 300)
-      fc.setField('leaseLength', '8-month')
       await wait(300)
+      fc.setField('budgetMax', '1000')
+      if (abortRef.current) return
+
+      await moveCursorTo('[data-demo="lease-section"]', 300)
+      await wait(250)
+      fc.setField('leaseLength', '8-month')
+      if (abortRef.current) return
+
+      await wait(250)
       fc.setField('roommateCount', '1')
       fc.setField('preferredGender', 'any')
-      await wait(250)
+
+      await moveCursorTo('#moveIn', 300)
+      await wait(200)
       fc.setField('moveInDate', '2026-09-01')
       if (abortRef.current) return
 
-      await wait(400)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(350)
-      const nextPos2 = getElementCenter('[data-demo="next-btn"]')
-      if (nextPos2) clickAt(nextPos2)
       await wait(300)
+      await moveCursorTo('[data-demo="next-btn"]', 250)
+      await wait(300)
+      const p2 = getElementCenter('[data-demo="next-btn"]')
+      if (p2) clickAt(p2)
+      await wait(250)
       fc.setStep(2)
       if (abortRef.current) return
 
       // ── Step 3: Lifestyle ──
-      await wait(500)
-      await moveCursorTo('[data-demo="form-card"]', 300)
-      await wait(300)
-      fc.setField('sleepTime', '11 PM')
-      await wait(300)
-      fc.setField('wakeTime', '7 AM')
-      await wait(300)
-      fc.setField('cleaningFrequency', 'weekly')
-      await wait(300)
-      fc.setField('temperature', 'moderate')
+      await wait(450)
+      await moveCursorTo('[data-demo="sleep-section"]', 300)
       await wait(250)
+      fc.setField('sleepTime', '11 PM')
+      await wait(250)
+      fc.setField('wakeTime', '7 AM')
+      if (abortRef.current) return
+
+      await moveCursorTo('[data-demo="cleaning-section"]', 300)
+      await wait(250)
+      fc.setField('cleaningFrequency', 'weekly')
+      await wait(250)
+      fc.setField('temperature', 'moderate')
+      if (abortRef.current) return
+
+      await moveCursorTo('[data-demo="noise-section"]', 300)
+      await wait(200)
       fc.setField('noiseTolerance', '60')
       if (abortRef.current) return
 
-      await wait(400)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(350)
-      const nextPos3 = getElementCenter('[data-demo="next-btn"]')
-      if (nextPos3) clickAt(nextPos3)
       await wait(300)
+      await moveCursorTo('[data-demo="next-btn"]', 250)
+      await wait(300)
+      const p3 = getElementCenter('[data-demo="next-btn"]')
+      if (p3) clickAt(p3)
+      await wait(250)
       fc.setStep(3)
       if (abortRef.current) return
 
       // ── Step 4: Social ──
-      await wait(500)
+      await wait(450)
       await moveCursorTo('[data-demo="form-card"]', 300)
-      await wait(300)
+      await wait(250)
       fc.setField('socialScale', [65])
+      if (abortRef.current) return
+
+      await moveCursorTo('[data-demo="guest-section"]', 300)
+      await wait(250)
       fc.setField('guestFrequency', 'occasionally')
-      await wait(300)
+      await wait(250)
       fc.setField('studyLocation', 'home')
-      await wait(300)
+      if (abortRef.current) return
+
+      await wait(200)
       fc.setField('cookingFrequency', 'few-times')
       fc.setField('conflictStyle', 'direct')
-      await wait(300)
+
+      await moveCursorTo('[data-demo="dealbreaker-section"]', 300)
+      await wait(250)
       fc.setField('dealBreakers', ['Smoking', 'Drug Use'])
       if (abortRef.current) return
 
-      await wait(400)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(350)
-      const nextPos4 = getElementCenter('[data-demo="next-btn"]')
-      if (nextPos4) clickAt(nextPos4)
       await wait(300)
+      await moveCursorTo('[data-demo="next-btn"]', 250)
+      await wait(300)
+      const p4 = getElementCenter('[data-demo="next-btn"]')
+      if (p4) clickAt(p4)
+      await wait(250)
       fc.setStep(4)
       if (abortRef.current) return
 
       // ── Step 5: Personality ──
-      await wait(500)
-      await moveCursorTo('[data-demo="form-card"]', 300)
+      await wait(450)
+      await moveCursorTo('[data-demo="mbti-section"]', 300)
       await wait(300)
-      const mbtiLetters = [
+      const mbti = [
         { field: 'mbtiE', value: 'E' },
         { field: 'mbtiS', value: 'N' },
         { field: 'mbtiT', value: 'F' },
         { field: 'mbtiJ', value: 'J' },
       ]
-      for (const { field, value } of mbtiLetters) {
+      for (const { field, value } of mbti) {
         if (abortRef.current) return
         fc.setField(field, value)
-        await wait(400)
+        await wait(350)
       }
 
-      await wait(400)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(350)
-      const nextPos5 = getElementCenter('[data-demo="next-btn"]')
-      if (nextPos5) clickAt(nextPos5)
       await wait(300)
+      await moveCursorTo('[data-demo="next-btn"]', 250)
+      await wait(300)
+      const p5 = getElementCenter('[data-demo="next-btn"]')
+      if (p5) clickAt(p5)
+      await wait(250)
       fc.setStep(5)
       if (abortRef.current) return
 
       // ── Step 6: Verification ──
-      await wait(500)
+      await wait(450)
       await moveCursorTo('#uniEmail', 300)
-      await wait(300)
+      await wait(250)
       const email = 'sarah.m@uwo.ca'
       for (let i = 1; i <= email.length; i++) {
         if (abortRef.current) return
         fc.setField('universityEmail', email.slice(0, i))
         await wait(50)
       }
-      await wait(350)
+      await wait(300)
+
+      await moveCursorTo('[data-demo="id-upload-section"]', 250)
+      await wait(250)
       fc.setField('idUploaded', true)
-      await wait(350)
+      await wait(300)
       fc.setField('agreeToTerms', true)
       if (abortRef.current) return
 
-      // Click "Find My Match"
-      await wait(500)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
       await wait(400)
-      const submitPos = getElementCenter('[data-demo="next-btn"]')
-      if (submitPos) clickAt(submitPos)
+      await moveCursorTo('[data-demo="next-btn"]', 250)
+      await wait(350)
+      const sp = getElementCenter('[data-demo="next-btn"]')
+      if (sp) clickAt(sp)
       await wait(500)
 
-      // ── Transition to results ──
       setDemoPhase('processing')
       scriptRunningRef.current = false
     }
 
     run()
-
-    return () => {
-      abortRef.current = true
-      scriptRunningRef.current = false
-    }
+    return () => { abortRef.current = true; scriptRunningRef.current = false }
   }, [isDemoActive, demoPhase, moveCursorTo, clickAt, setDemoPhase, setCursorPos])
 
-  /* ─── PROCESSING + RESULTS PHASE ─── */
+  /* ─── PROCESSING + RESULTS ─── */
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'processing') return
-
-    // Reset abort flag so the processing phase can run
     abortRef.current = false
-
     setCursorPos(null)
     setShowProcessing(true)
 
@@ -376,7 +367,6 @@ export function DemoOverlay() {
       setShowProcessing(false)
       setShowScore(true)
 
-      // Count up score
       const steps = [0, 8, 18, 30, 45, 58, 72, 82, 88, 92]
       for (const s of steps) {
         if (abortRef.current) return
@@ -390,6 +380,8 @@ export function DemoOverlay() {
       setShowProfiles(true)
       await wait(1800)
       setShowTags(true)
+      await wait(1500)
+      setShowMap(true)
       await wait(1800)
       setShowInsight(true)
       setDemoPhase('results')
@@ -408,6 +400,7 @@ export function DemoOverlay() {
       setShowProfiles(false)
       setShowTags(false)
       setShowInsight(false)
+      setShowMap(false)
     }
   }, [isDemoActive])
 
@@ -426,44 +419,32 @@ export function DemoOverlay() {
     setShowProfiles(false)
     setShowTags(false)
     setShowInsight(false)
+    setShowMap(false)
     scriptRunningRef.current = false
-
-    setTimeout(() => {
-      abortRef.current = false
-      setDemoPhase('landing')
-      navigate('/')
-    }, 100)
+    setTimeout(() => { abortRef.current = false; setDemoPhase('landing'); navigate('/') }, 100)
   }, [setDemoPhase, navigate])
 
   if (!isDemoActive) return null
 
-  /* ─── Score ring SVG ─── */
   const circumference = 2 * Math.PI * 54
   const strokeDashoffset = circumference - (scoreValue / 100) * circumference
 
   return (
     <>
-      {/* ── Animated colorful gradient border — 4 edges ── */}
-      <div className="fixed inset-0 z-[9998] pointer-events-none">
-        {/* Top */}
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={borderGradient} />
-        {/* Bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={borderGradient} />
-        {/* Left */}
-        <div className="absolute top-0 left-0 bottom-0 w-[2px]" style={{
-          ...borderGradient,
-          background: 'linear-gradient(180deg, #3b82f6, #8b5cf6, #34d399, #f59e0b, #ec4899, #3b82f6)',
-          backgroundSize: '100% 200%',
+      {/* ── Animated gradient border — rounded corners via mask ── */}
+      <div
+        className="fixed inset-0 z-[9998] pointer-events-none rounded-xl"
+        style={{
+          padding: '2.5px',
+          background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #34d399, #f59e0b, #ec4899, #3b82f6)',
+          backgroundSize: '200% 100%',
           animation: 'demo-border-slide 3s linear infinite',
-        }} />
-        {/* Right */}
-        <div className="absolute top-0 right-0 bottom-0 w-[2px]" style={{
-          ...borderGradient,
-          background: 'linear-gradient(180deg, #ec4899, #f59e0b, #34d399, #8b5cf6, #3b82f6, #ec4899)',
-          backgroundSize: '100% 200%',
-          animation: 'demo-border-slide 3s linear infinite',
-        }} />
-      </div>
+          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+          maskComposite: 'exclude',
+        }}
+      />
       {/* Inner glow */}
       <div
         className="fixed inset-0 z-[9997] pointer-events-none"
@@ -473,7 +454,7 @@ export function DemoOverlay() {
         }}
       />
 
-      {/* ── "Demo Active" badge + Exit button — right side, vertical ── */}
+      {/* ── Badge + Exit ── */}
       <div className="fixed top-24 right-4 z-[10002] flex flex-col items-end gap-2">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-md">
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -628,7 +609,7 @@ export function DemoOverlay() {
                 )}
               </AnimatePresence>
 
-              {/* Profile Cards — no middle badge */}
+              {/* Profile Cards */}
               <AnimatePresence>
                 {showProfiles && (
                   <motion.div
@@ -637,7 +618,6 @@ export function DemoOverlay() {
                     className="w-full max-w-lg mt-12"
                   >
                     <div className="grid grid-cols-2 gap-6 items-center">
-                      {/* Sarah */}
                       <motion.div
                         initial={{ x: -60, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -645,9 +625,7 @@ export function DemoOverlay() {
                         className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60"
                       >
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-200 font-serif font-semibold text-sm">
-                            S
-                          </div>
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-200 font-serif font-semibold text-sm">S</div>
                           <div>
                             <p className="font-serif font-semibold text-slate-200 text-sm">Sarah M.</p>
                             <p className="text-xs font-sans text-slate-500">3rd Year, Business</p>
@@ -662,7 +640,6 @@ export function DemoOverlay() {
                         </div>
                       </motion.div>
 
-                      {/* Alex */}
                       <motion.div
                         initial={{ x: 60, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
@@ -670,9 +647,7 @@ export function DemoOverlay() {
                         className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60"
                       >
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-200 font-serif font-semibold text-sm">
-                            A
-                          </div>
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center text-slate-200 font-serif font-semibold text-sm">A</div>
                           <div>
                             <p className="font-serif font-semibold text-slate-200 text-sm">Alex T.</p>
                             <p className="text-xs font-sans text-slate-500">4th Year, Engineering</p>
@@ -714,6 +689,85 @@ export function DemoOverlay() {
                 )}
               </AnimatePresence>
 
+              {/* Suggested Listing — Map Card */}
+              <AnimatePresence>
+                {showMap && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full max-w-md mt-8"
+                  >
+                    <div className="rounded-xl border border-slate-800/60 bg-white/[0.03] overflow-hidden">
+                      {/* Map visualization */}
+                      <div className="relative h-40 bg-slate-900/80 overflow-hidden">
+                        <svg className="w-full h-full" viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          {/* Grid streets */}
+                          <line x1="0" y1="40" x2="400" y2="40" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+                          <line x1="0" y1="80" x2="400" y2="80" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+                          <line x1="0" y1="120" x2="400" y2="120" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+                          <line x1="80" y1="0" x2="80" y2="160" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+                          <line x1="160" y1="0" x2="160" y2="160" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+                          <line x1="240" y1="0" x2="240" y2="160" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+                          <line x1="320" y1="0" x2="320" y2="160" stroke="rgba(148,163,184,0.1)" strokeWidth="1" />
+
+                          {/* Main roads */}
+                          <line x1="0" y1="80" x2="400" y2="80" stroke="rgba(148,163,184,0.2)" strokeWidth="3" />
+                          <line x1="200" y1="0" x2="200" y2="160" stroke="rgba(148,163,184,0.2)" strokeWidth="3" />
+
+                          {/* Campus area */}
+                          <rect x="100" y="20" width="100" height="60" rx="4" fill="rgba(52,211,153,0.06)" stroke="rgba(52,211,153,0.2)" strokeWidth="1" strokeDasharray="4 2" />
+                          <text x="150" y="55" textAnchor="middle" fill="rgba(52,211,153,0.4)" fontSize="9" fontFamily="Inter, sans-serif">Western Campus</text>
+
+                          {/* Listing pin */}
+                          <motion.g
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
+                          >
+                            <circle cx="260" cy="60" r="16" fill="rgba(59,130,246,0.15)" />
+                            <circle cx="260" cy="60" r="8" fill="rgba(59,130,246,0.3)" />
+                            <circle cx="260" cy="60" r="4" fill="#3b82f6" />
+                          </motion.g>
+
+                          {/* Distance line */}
+                          <line x1="180" y1="50" x2="252" y2="57" stroke="rgba(148,163,184,0.2)" strokeWidth="1" strokeDasharray="3 3" />
+                          <text x="216" y="46" textAnchor="middle" fill="rgba(148,163,184,0.4)" fontSize="8" fontFamily="Inter, sans-serif">0.8 km</text>
+
+                          {/* Road labels */}
+                          <text x="350" y="76" textAnchor="end" fill="rgba(148,163,184,0.25)" fontSize="7" fontFamily="Inter, sans-serif">Richmond St</text>
+                          <text x="196" y="152" textAnchor="end" fill="rgba(148,163,184,0.25)" fontSize="7" fontFamily="Inter, sans-serif">Western Rd</text>
+                        </svg>
+                      </div>
+
+                      {/* Listing details */}
+                      <div className="p-4 space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-xs font-sans text-slate-500 uppercase tracking-wider mb-1">Suggested Listing</p>
+                            <p className="text-sm font-serif font-semibold text-slate-200">2BR Apartment — $900/mo</p>
+                            <p className="text-xs font-sans text-slate-500 mt-0.5">123 Richmond St, London ON</p>
+                          </div>
+                          <span className="px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-sans font-medium text-emerald-400">
+                            In Budget
+                          </span>
+                        </div>
+                        <div className="flex gap-4 text-xs font-sans text-slate-500">
+                          <span>0.8 km from campus</span>
+                          <span>Bus Route 6</span>
+                          <span>Laundry in-unit</span>
+                        </div>
+                        <div className="flex items-center gap-2 pt-1">
+                          <div className="h-1.5 flex-1 rounded-full bg-slate-800 overflow-hidden">
+                            <div className="h-full rounded-full bg-emerald-500/60" style={{ width: '85%' }} />
+                          </div>
+                          <span className="text-[10px] font-sans text-slate-500">85% budget overlap</span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* AI Insight */}
               <AnimatePresence>
                 {showInsight && (
@@ -731,7 +785,6 @@ export function DemoOverlay() {
                       </p>
                     </div>
 
-                    {/* Action buttons */}
                     <div className="flex items-center justify-center gap-4 mt-8">
                       <button
                         onClick={handleWatchAgain}
