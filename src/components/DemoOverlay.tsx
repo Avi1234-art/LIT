@@ -12,6 +12,17 @@ function getElementCenter(selector: string): { x: number; y: number } | null {
   return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
 }
 
+/* helper: scroll element into view if off-screen */
+function scrollToElement(selector: string) {
+  const el = document.querySelector(selector)
+  if (!el) return
+  const rect = el.getBoundingClientRect()
+  const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight
+  if (!isVisible) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+}
+
 /* helper: wait */
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
@@ -61,6 +72,11 @@ export function DemoOverlay() {
     async (selector: string, delayMs = 600) => {
       if (abortRef.current) return
       await wait(delayMs)
+      if (abortRef.current) return
+      scrollToElement(selector)
+      // Wait for scroll to settle
+      await wait(400)
+      if (abortRef.current) return
       const pos = getElementCenter(selector)
       if (pos) setCursorPos(pos)
     },
@@ -75,7 +91,7 @@ export function DemoOverlay() {
     [],
   )
 
-  /* ─── LANDING PHASE: move cursor to "Find Roommates" and navigate ─── */
+  /* ─── LANDING PHASE: move cursor to hero CTA "Find My Roommate" ─── */
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'landing' || scriptRunningRef.current) return
     if (location.pathname !== '/' && location.pathname !== '/LIT/' && location.pathname !== '/LIT') {
@@ -88,23 +104,23 @@ export function DemoOverlay() {
 
     const run = async () => {
       // Wait for landing page to render
-      await wait(1500)
+      await wait(2000)
       if (abortRef.current) return
 
       // Show cursor at center first
       setCursorPos({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
-      await wait(800)
+      await wait(1200)
       if (abortRef.current) return
 
-      // Move to "Find Roommates" nav link
-      await moveCursorTo('[data-demo="nav-find-roommates"]', 300)
-      await wait(600)
+      // Move to the hero "Find My Roommate" button
+      await moveCursorTo('[data-demo="hero-cta"]', 500)
+      await wait(1000)
       if (abortRef.current) return
 
       // Click
-      const navPos = getElementCenter('[data-demo="nav-find-roommates"]')
-      if (navPos) clickAt(navPos)
-      await wait(400)
+      const ctaPos = getElementCenter('[data-demo="hero-cta"]')
+      if (ctaPos) clickAt(ctaPos)
+      await wait(700)
       if (abortRef.current) return
 
       setDemoPhase('navigating')
@@ -124,7 +140,7 @@ export function DemoOverlay() {
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'navigating') return
     if (location.pathname === '/questionnaire' || location.pathname === '/LIT/questionnaire') {
-      const timer = setTimeout(() => setDemoPhase('form'), 600)
+      const timer = setTimeout(() => setDemoPhase('form'), 800)
       return () => clearTimeout(timer)
     }
   }, [isDemoActive, demoPhase, location.pathname, setDemoPhase])
@@ -138,13 +154,11 @@ export function DemoOverlay() {
 
     const run = async () => {
       const getFormControl = () => {
-        // Access form control from context - we read it from the ref each time
-        // because the formControl in context may not re-render this component
         return (window as unknown as { __demoFormControl?: { setField: (f: string, v: unknown) => void; setStep: (s: number) => void; submit: () => void } }).__demoFormControl
       }
 
       // Wait for form to mount and register
-      await wait(800)
+      await wait(1200)
       if (abortRef.current) return
 
       const fc = getFormControl()
@@ -153,110 +167,134 @@ export function DemoOverlay() {
         return
       }
 
+      // Scroll to top of form
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      await wait(600)
+
       // ── Step 1: About You ──
-      await moveCursorTo('#name', 400)
-      await wait(300)
+      await moveCursorTo('#name', 600)
+      await wait(500)
       // Type name letter by letter
       const name = 'Sarah M.'
       for (let i = 1; i <= name.length; i++) {
         if (abortRef.current) return
         fc.setField('name', name.slice(0, i))
-        await wait(60)
+        await wait(90)
       }
-      await wait(300)
+      await wait(500)
 
-      await moveCursorTo('#age', 300)
-      await wait(200)
+      await moveCursorTo('#age', 500)
+      await wait(400)
       fc.setField('age', '21')
       if (abortRef.current) return
+      await wait(400)
 
-      await moveCursorTo('#gender', 300)
-      await wait(200)
+      await moveCursorTo('#gender', 500)
+      await wait(400)
       fc.setField('gender', 'female')
       if (abortRef.current) return
+      await wait(400)
 
-      await moveCursorTo('#university', 300)
-      await wait(200)
+      await moveCursorTo('#university', 500)
+      await wait(400)
       fc.setField('university', 'Western University')
       if (abortRef.current) return
+      await wait(400)
 
-      await moveCursorTo('#program', 300)
-      await wait(200)
+      await moveCursorTo('#program', 500)
+      await wait(400)
       fc.setField('program', 'Business')
       if (abortRef.current) return
+      await wait(400)
 
-      await moveCursorTo('#year', 300)
-      await wait(200)
+      await moveCursorTo('#year', 500)
+      await wait(400)
       fc.setField('year', '3')
       if (abortRef.current) return
 
       // Click Next
-      await wait(400)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(300)
+      await wait(700)
+      await moveCursorTo('[data-demo="next-btn"]', 500)
+      await wait(500)
       const nextPos = getElementCenter('[data-demo="next-btn"]')
       if (nextPos) clickAt(nextPos)
-      await wait(200)
+      await wait(400)
       fc.setStep(1)
       if (abortRef.current) return
 
       // ── Step 2: Housing ──
-      await wait(500)
+      await wait(800)
+      await moveCursorTo('#name', 400) // cursor to first visible field area
       fc.setField('budgetMin', '800')
+      await wait(500)
       fc.setField('budgetMax', '1000')
-      await wait(300)
+      await wait(500)
       fc.setField('leaseLength', '8-month')
-      await wait(200)
+      await wait(400)
       fc.setField('roommateCount', '1')
+      await wait(300)
       fc.setField('preferredGender', 'any')
+      await wait(300)
       fc.setField('moveInDate', '2026-09-01')
       if (abortRef.current) return
 
-      await wait(600)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(300)
-      if (nextPos) clickAt(getElementCenter('[data-demo="next-btn"]') || nextPos)
+      await wait(900)
+      await moveCursorTo('[data-demo="next-btn"]', 500)
+      await wait(500)
+      const nextPos2 = getElementCenter('[data-demo="next-btn"]')
+      if (nextPos2) clickAt(nextPos2)
+      await wait(400)
       fc.setStep(2)
       if (abortRef.current) return
 
       // ── Step 3: Lifestyle ──
-      await wait(500)
+      await wait(800)
       fc.setField('sleepTime', '11 PM')
-      await wait(200)
+      await wait(400)
       fc.setField('wakeTime', '7 AM')
-      await wait(200)
+      await wait(400)
       fc.setField('cleaningFrequency', 'weekly')
-      await wait(200)
+      await wait(400)
       fc.setField('temperature', 'moderate')
+      await wait(300)
       fc.setField('noiseTolerance', '60')
       if (abortRef.current) return
 
-      await wait(600)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(200)
+      await wait(900)
+      await moveCursorTo('[data-demo="next-btn"]', 500)
+      await wait(500)
+      const nextPos3 = getElementCenter('[data-demo="next-btn"]')
+      if (nextPos3) clickAt(nextPos3)
+      await wait(400)
       fc.setStep(3)
       if (abortRef.current) return
 
       // ── Step 4: Social ──
-      await wait(500)
+      await wait(800)
       fc.setField('socialScale', [65])
+      await wait(300)
       fc.setField('guestFrequency', 'occasionally')
-      await wait(200)
+      await wait(400)
       fc.setField('studyLocation', 'home')
-      await wait(200)
+      await wait(400)
       fc.setField('cookingFrequency', 'few-times')
+      await wait(300)
       fc.setField('conflictStyle', 'direct')
+      await wait(300)
       fc.setField('dealBreakers', ['Smoking', 'Drug Use'])
       if (abortRef.current) return
 
-      await wait(600)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(200)
+      await wait(900)
+      await moveCursorTo('[data-demo="next-btn"]', 500)
+      await wait(500)
+      const nextPos4 = getElementCenter('[data-demo="next-btn"]')
+      if (nextPos4) clickAt(nextPos4)
+      await wait(400)
       fc.setStep(4)
       if (abortRef.current) return
 
       // ── Step 5: Personality ──
-      await wait(400)
+      await wait(700)
       const mbtiLetters = [
         { field: 'mbtiE', value: 'E' },
         { field: 'mbtiS', value: 'N' },
@@ -266,36 +304,41 @@ export function DemoOverlay() {
       for (const { field, value } of mbtiLetters) {
         if (abortRef.current) return
         fc.setField(field, value)
-        await wait(400)
+        await wait(600)
       }
 
-      await wait(600)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(200)
+      await wait(900)
+      await moveCursorTo('[data-demo="next-btn"]', 500)
+      await wait(500)
+      const nextPos5 = getElementCenter('[data-demo="next-btn"]')
+      if (nextPos5) clickAt(nextPos5)
+      await wait(400)
       fc.setStep(5)
       if (abortRef.current) return
 
       // ── Step 6: Verification ──
+      await wait(700)
+      await moveCursorTo('#uniEmail', 500)
       await wait(400)
       const email = 'sarah.m@uwo.ca'
       for (let i = 1; i <= email.length; i++) {
         if (abortRef.current) return
         fc.setField('universityEmail', email.slice(0, i))
-        await wait(40)
+        await wait(60)
       }
-      await wait(300)
+      await wait(500)
       fc.setField('idUploaded', true)
-      await wait(300)
+      await wait(500)
       fc.setField('agreeToTerms', true)
       if (abortRef.current) return
 
       // Click "Find My Match"
-      await wait(600)
-      await moveCursorTo('[data-demo="next-btn"]', 300)
-      await wait(300)
+      await wait(900)
+      await moveCursorTo('[data-demo="next-btn"]', 500)
+      await wait(500)
       const submitPos = getElementCenter('[data-demo="next-btn"]')
       if (submitPos) clickAt(submitPos)
-      await wait(500)
+      await wait(700)
 
       // ── Transition to results ──
       setDemoPhase('processing')
@@ -314,11 +357,14 @@ export function DemoOverlay() {
   useEffect(() => {
     if (!isDemoActive || demoPhase !== 'processing') return
 
+    // Reset abort flag so the processing phase can run
+    abortRef.current = false
+
     setCursorPos(null)
     setShowProcessing(true)
 
     const run = async () => {
-      await wait(3000)
+      await wait(3500)
       if (abortRef.current) return
       setShowProcessing(false)
       setShowScore(true)
@@ -328,16 +374,16 @@ export function DemoOverlay() {
       for (const s of steps) {
         if (abortRef.current) return
         setScoreValue(s)
-        await wait(150)
+        await wait(180)
       }
 
-      await wait(800)
+      await wait(1000)
       setShowBars(true)
       await wait(2500)
       setShowProfiles(true)
-      await wait(1500)
+      await wait(1800)
       setShowTags(true)
-      await wait(1500)
+      await wait(1800)
       setShowInsight(true)
       setDemoPhase('results')
     }
@@ -401,9 +447,9 @@ export function DemoOverlay() {
         }}
       />
 
-      {/* ── "Demo Active" badge + stop button ── */}
-      <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[10002] flex items-center gap-3">
-        <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-md">
+      {/* ── "Demo Active" badge + Exit button — right side, vertical ── */}
+      <div className="fixed top-24 right-4 z-[10002] flex flex-col items-end gap-2">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-md">
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-xs font-sans font-medium text-emerald-400">Demo Active</span>
         </div>

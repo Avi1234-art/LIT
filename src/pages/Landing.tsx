@@ -351,6 +351,7 @@ export default function Landing() {
           >
             <Link
               to="/questionnaire"
+              data-demo="hero-cta"
               className="group px-8 py-3 rounded-full border border-slate-500 text-slate-200 font-sans text-sm font-medium hover:bg-white/10 hover:border-slate-400 transition-all"
             >
               Find My Roommate
