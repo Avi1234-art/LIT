@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Check, Loader2 } from 'lucide-react'
@@ -135,6 +135,24 @@ export default function Questionnaire() {
   const update = (field: keyof FormData, value: string | number[] | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
+
+  // Expose form control for demo mode
+  useEffect(() => {
+    (window as unknown as { __demoFormControl?: { setField: (f: string, v: unknown) => void; setStep: (s: number) => void; submit: () => void } }).__demoFormControl = {
+      setField: (field: string, value: unknown) => {
+        setFormData((prev) => ({ ...prev, [field]: value }))
+      },
+      setStep: (step: number) => {
+        setCurrentStep(step)
+      },
+      submit: () => {
+        handleSubmit()
+      },
+    }
+    return () => {
+      delete (window as unknown as { __demoFormControl?: unknown }).__demoFormControl
+    }
+  }, [])
 
   const toggleDealBreaker = (item: string) => {
     setFormData((prev) => {
@@ -988,6 +1006,7 @@ export default function Questionnaire() {
                 <ChevronLeft className="h-4 w-4" /> Back
               </Button>
               <Button
+                data-demo="next-btn"
                 onClick={currentStep === steps.length - 1 ? handleSubmit : nextStep}
                 disabled={isSubmitting}
                 className="rounded-2xl"

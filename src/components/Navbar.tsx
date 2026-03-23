@@ -1,9 +1,12 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useDemo } from '@/context/DemoContext'
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navigate = useNavigate()
+  const { startDemo } = useDemo()
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
@@ -18,7 +21,7 @@ export function Navbar() {
           <Link to="/" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Home
           </Link>
-          <Link to="/questionnaire" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
+          <Link to="/questionnaire" data-demo="nav-find-roommates" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Find Roommates
           </Link>
           <Link to="/landlord" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
@@ -27,9 +30,13 @@ export function Navbar() {
           <Link to="/reviews" className="px-4 py-1.5 rounded-full text-sm font-sans font-light text-slate-400 hover:text-slate-200 hover:bg-white/[0.06] transition-all">
             Reviews
           </Link>
-          <Link to="/demo" className="px-4 py-1.5 rounded-full text-sm font-sans font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/[0.08] transition-all" style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}>
+          <button
+            onClick={() => { navigate('/'); setTimeout(() => startDemo(), 100) }}
+            className="px-4 py-1.5 rounded-full text-sm font-sans font-medium text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/[0.08] transition-all cursor-pointer"
+            style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}
+          >
             Demo
-          </Link>
+          </button>
         </div>
 
         {/* Desktop CTA */}
@@ -78,7 +85,7 @@ export function Navbar() {
               <Link onClick={() => setMobileOpen(false)} to="/questionnaire" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Find Roommates</Link>
               <Link onClick={() => setMobileOpen(false)} to="/landlord" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Landlord Portal</Link>
               <Link onClick={() => setMobileOpen(false)} to="/reviews" className="px-4 py-2 rounded-full text-sm font-sans font-light text-slate-400 hover:bg-white/[0.06]">Reviews</Link>
-              <Link onClick={() => setMobileOpen(false)} to="/demo" className="px-4 py-2 rounded-full text-sm font-sans font-medium text-emerald-400 hover:bg-emerald-500/[0.08]" style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}>Demo</Link>
+              <button onClick={() => { setMobileOpen(false); navigate('/'); setTimeout(() => startDemo(), 100) }} className="px-4 py-2 rounded-full text-sm font-sans font-medium text-emerald-400 hover:bg-emerald-500/[0.08] text-left cursor-pointer" style={{ textShadow: '0 0 12px rgba(52,211,153,0.4)' }}>Demo</button>
               <Link
                 onClick={() => setMobileOpen(false)}
                 to="/questionnaire"
