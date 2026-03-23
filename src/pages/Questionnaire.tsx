@@ -259,6 +259,7 @@ export default function Questionnaire() {
     valueB,
     field,
     description,
+    demoId,
   }: {
     label: string
     optionA: string
@@ -267,10 +268,11 @@ export default function Questionnaire() {
     valueB: string
     field: 'mbtiE' | 'mbtiS' | 'mbtiT' | 'mbtiJ'
     description: string
+    demoId?: string
   }) {
     const current = formData[field]
     return (
-      <div className="space-y-2">
+      <div className="space-y-2" data-demo={demoId}>
         <Label className="text-slate-400 text-xs uppercase tracking-wider">{label}</Label>
         <p className="text-xs font-sans text-slate-600 -mt-1">{description}</p>
         <div className="grid grid-cols-2 gap-2">
@@ -484,6 +486,7 @@ export default function Questionnaire() {
                           <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">$</span>
                             <Input
+                              id="budgetMax"
                               type="number"
                               placeholder="Max (e.g. 1200)"
                               value={formData.budgetMax}
@@ -633,7 +636,7 @@ export default function Questionnaire() {
                         </RadioGroup>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="temp-section">
                         <Label>Room Temperature Preference</Label>
                         <RadioGroup
                           value={formData.temperature}
@@ -685,7 +688,7 @@ export default function Questionnaire() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-5">
-                      <motion.div variants={fadeIn} className="space-y-3">
+                      <motion.div variants={fadeIn} className="space-y-3" data-demo="social-slider">
                         <Label>How social are you at home?</Label>
                         <div className="flex items-center justify-between text-xs font-sans text-slate-500 px-1">
                           <span>Introvert — I need my space</span>
@@ -725,7 +728,7 @@ export default function Questionnaire() {
                         </RadioGroup>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="study-section">
                         <Label>Where do you usually study?</Label>
                         <RadioGroup
                           value={formData.studyLocation}
@@ -751,7 +754,7 @@ export default function Questionnaire() {
                         </RadioGroup>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="cooking-section">
                         <Label>Cooking habits</Label>
                         <Select value={formData.cookingFrequency} onValueChange={(v) => update('cookingFrequency', v)}>
                           <SelectTrigger>
@@ -766,7 +769,7 @@ export default function Questionnaire() {
                         </Select>
                       </motion.div>
 
-                      <motion.div variants={fadeIn} className="space-y-2">
+                      <motion.div variants={fadeIn} className="space-y-2" data-demo="conflict-section">
                         <Label>How do you handle conflict?</Label>
                         <Select value={formData.conflictStyle} onValueChange={(v) => update('conflictStyle', v)}>
                           <SelectTrigger>
@@ -835,6 +838,7 @@ export default function Questionnaire() {
                         valueB="I"
                         field="mbtiE"
                         description="Where do you get your energy from?"
+                        demoId="mbti-energy"
                       />
                       <MBTIDimension
                         label="Information"
@@ -844,6 +848,7 @@ export default function Questionnaire() {
                         valueB="N"
                         field="mbtiS"
                         description="How do you take in information?"
+                        demoId="mbti-info"
                       />
                       <MBTIDimension
                         label="Decisions"
@@ -853,6 +858,7 @@ export default function Questionnaire() {
                         valueB="F"
                         field="mbtiT"
                         description="How do you make decisions?"
+                        demoId="mbti-decision"
                       />
                       <MBTIDimension
                         label="Structure"
@@ -862,6 +868,7 @@ export default function Questionnaire() {
                         valueB="P"
                         field="mbtiJ"
                         description="How do you organize your life?"
+                        demoId="mbti-structure"
                       />
 
                       {formData.mbtiE && formData.mbtiS && formData.mbtiT && formData.mbtiJ && (
