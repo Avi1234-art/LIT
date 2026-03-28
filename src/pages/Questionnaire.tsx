@@ -229,22 +229,22 @@ export default function Questionnaire() {
         className={cn(
           'flex items-start gap-3 rounded-xl border p-4 cursor-pointer transition-all duration-200',
           currentValue === value
-            ? 'border-slate-500 bg-white/[0.06]'
-            : 'border-slate-800/60 hover:border-slate-700 hover:bg-white/[0.03]',
+            ? 'border-[rgba(255,145,92,0.42)] bg-[rgba(255,145,92,0.1)]'
+            : 'border-[rgba(255,145,92,0.16)] hover:border-[rgba(255,145,92,0.3)] hover:bg-[rgba(255,145,92,0.04)]',
         )}
         onClick={onSelect}
       >
         <div
           className={cn(
             'mt-0.5 h-4 w-4 rounded-full border-2 shrink-0 transition-all duration-200 flex items-center justify-center',
-            currentValue === value ? 'border-slate-200' : 'border-slate-600',
+            currentValue === value ? 'border-[var(--brand-accent-soft)]' : 'border-[rgba(255,145,92,0.3)]',
           )}
         >
-          {currentValue === value && <div className="h-2 w-2 rounded-full bg-slate-200" />}
+          {currentValue === value && <div className="h-2 w-2 rounded-full bg-[var(--brand-accent)]" />}
         </div>
         <div>
-          <p className="text-sm font-sans font-medium text-slate-200">{label}</p>
-          {description && <p className="text-xs font-sans text-slate-500 mt-0.5">{description}</p>}
+          <p className="text-sm font-sans font-medium text-[var(--brand-text)]">{label}</p>
+          {description && <p className="text-xs font-sans text-[var(--brand-muted)] mt-0.5">{description}</p>}
         </div>
       </div>
     )
@@ -273,8 +273,8 @@ export default function Questionnaire() {
     const current = formData[field]
     return (
       <div className="space-y-2" data-demo={demoId}>
-        <Label className="text-slate-400 text-xs uppercase tracking-wider">{label}</Label>
-        <p className="text-xs font-sans text-slate-600 -mt-1">{description}</p>
+        <Label className="text-[var(--brand-accent-soft)] text-xs uppercase tracking-wider">{label}</Label>
+        <p className="text-xs font-sans text-[var(--brand-muted)] -mt-1">{description}</p>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
@@ -282,8 +282,8 @@ export default function Questionnaire() {
             className={cn(
               'rounded-xl border px-4 py-3 text-sm font-sans transition-all duration-200 cursor-pointer',
               current === valueA
-                ? 'border-slate-500 bg-white/[0.06] text-slate-200'
-                : 'border-slate-800/60 text-slate-400 hover:border-slate-700 hover:bg-white/[0.03]',
+                ? 'border-[rgba(255,145,92,0.42)] bg-[rgba(255,145,92,0.1)] text-[var(--brand-text)]'
+                : 'border-[rgba(255,145,92,0.16)] text-[var(--brand-muted)] hover:border-[rgba(255,145,92,0.3)] hover:bg-[rgba(255,145,92,0.04)]',
             )}
           >
             {optionA}
@@ -294,8 +294,8 @@ export default function Questionnaire() {
             className={cn(
               'rounded-xl border px-4 py-3 text-sm font-sans transition-all duration-200 cursor-pointer',
               current === valueB
-                ? 'border-slate-500 bg-white/[0.06] text-slate-200'
-                : 'border-slate-800/60 text-slate-400 hover:border-slate-700 hover:bg-white/[0.03]',
+                ? 'border-[rgba(255,145,92,0.42)] bg-[rgba(255,145,92,0.1)] text-[var(--brand-text)]'
+                : 'border-[rgba(255,145,92,0.16)] text-[var(--brand-muted)] hover:border-[rgba(255,145,92,0.3)] hover:bg-[rgba(255,145,92,0.04)]',
             )}
           >
             {optionB}
@@ -306,7 +306,7 @@ export default function Questionnaire() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 pt-24 pb-16 px-6">
+    <div className="brand-theme min-h-screen pt-24 pb-16 px-6">
       <div className="w-full max-w-lg mx-auto">
         {/* ── Progress indicator ── */}
         <motion.div
@@ -321,19 +321,19 @@ export default function Questionnaire() {
                 <button
                   type="button"
                   className={cn(
-                    'w-4 h-4 rounded-full transition-all duration-300 cursor-pointer hover:ring-4 hover:ring-slate-400/20',
+                    'w-4 h-4 rounded-full transition-all duration-300 cursor-pointer hover:ring-4 hover:ring-[rgba(255,145,92,0.24)]',
                     index < currentStep
-                      ? 'bg-slate-400'
+                      ? 'bg-[var(--brand-accent)]'
                       : index === currentStep
-                        ? 'bg-slate-200 ring-4 ring-slate-200/20'
-                        : 'bg-slate-700 hover:bg-slate-600',
+                        ? 'bg-[var(--brand-accent-soft)] ring-4 ring-[rgba(255,145,92,0.22)]'
+                        : 'bg-[rgba(255,145,92,0.18)] hover:bg-[rgba(255,145,92,0.28)]',
                   )}
                   onClick={() => setCurrentStep(index)}
                 />
                 <span
                   className={cn(
                     'text-[10px] font-sans mt-1.5 hidden sm:block',
-                    index === currentStep ? 'text-slate-300 font-medium' : 'text-slate-600',
+                    index === currentStep ? 'text-[var(--brand-accent-soft)] font-medium' : 'text-[var(--brand-muted)]',
                   )}
                 >
                   {step.title}
@@ -341,9 +341,9 @@ export default function Questionnaire() {
               </div>
             ))}
           </div>
-          <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden mt-2">
+          <div className="w-full bg-[rgba(255,145,92,0.14)] h-1 rounded-full overflow-hidden mt-2">
             <motion.div
-              className="h-full bg-slate-400"
+              className="h-full bg-[var(--brand-accent)]"
               initial={{ width: 0 }}
               animate={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
               transition={{ duration: 0.3 }}
@@ -802,8 +802,8 @@ export default function Questionnaire() {
                               className={cn(
                                 'flex items-center gap-2 rounded-xl border p-3 cursor-pointer transition-all duration-200',
                                 formData.dealBreakers.includes(item)
-                                  ? 'border-red-900/60 bg-red-950/20'
-                                  : 'border-slate-800/60 hover:border-slate-700 hover:bg-white/[0.03]',
+                                  ? 'border-[rgba(255,145,92,0.34)] bg-[rgba(255,145,92,0.1)]'
+                                  : 'border-[rgba(255,145,92,0.16)] hover:border-[rgba(255,145,92,0.3)] hover:bg-[rgba(255,145,92,0.04)]',
                               )}
                               onClick={() => toggleDealBreaker(item)}
                             >
@@ -811,7 +811,7 @@ export default function Questionnaire() {
                                 checked={formData.dealBreakers.includes(item)}
                                 onCheckedChange={() => toggleDealBreaker(item)}
                               />
-                              <span className="text-sm font-sans text-slate-300">{item}</span>
+                              <span className="text-sm font-sans text-[var(--brand-text)]">{item}</span>
                             </div>
                           ))}
                         </div>
@@ -875,10 +875,10 @@ export default function Questionnaire() {
                         <motion.div
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="text-center py-4 rounded-xl border border-slate-700 bg-white/[0.04]"
+                          className="text-center py-4 rounded-xl border border-[rgba(255,145,92,0.18)] bg-[rgba(255,145,92,0.05)]"
                         >
-                          <p className="text-xs font-sans text-slate-500 uppercase tracking-wider mb-1">Your Type</p>
-                          <p className="text-3xl font-serif font-bold text-slate-100 tracking-widest">
+                          <p className="text-xs font-sans text-[var(--brand-muted)] uppercase tracking-wider mb-1">Your Type</p>
+                          <p className="text-3xl font-serif font-bold text-[var(--brand-text)] tracking-widest">
                             {formData.mbtiE}{formData.mbtiS}{formData.mbtiT}{formData.mbtiJ}
                           </p>
                         </motion.div>
@@ -906,7 +906,7 @@ export default function Questionnaire() {
                           value={formData.universityEmail}
                           onChange={(e) => update('universityEmail', e.target.value)}
                         />
-                        <p className="text-xs font-sans text-slate-600">
+                        <p className="text-xs font-sans text-[var(--brand-muted)]">
                           We'll send a verification link to confirm your student status
                         </p>
                       </motion.div>
@@ -917,21 +917,21 @@ export default function Questionnaire() {
                           className={cn(
                             'rounded-xl border-2 border-dashed p-6 text-center cursor-pointer transition-all duration-200',
                             formData.idUploaded
-                              ? 'border-slate-500 bg-white/[0.04]'
-                              : 'border-slate-700 hover:border-slate-600 hover:bg-white/[0.02]',
+                              ? 'border-[rgba(255,145,92,0.34)] bg-[rgba(255,145,92,0.06)]'
+                              : 'border-[rgba(255,145,92,0.24)] hover:border-[rgba(255,145,92,0.38)] hover:bg-[rgba(255,145,92,0.04)]',
                           )}
                           onClick={() => update('idUploaded', true)}
                         >
                           {formData.idUploaded ? (
                             <div className="space-y-1">
-                              <Check className="w-6 h-6 text-emerald-500 mx-auto" />
-                              <p className="text-sm font-sans text-slate-300">ID uploaded</p>
-                              <p className="text-xs font-sans text-slate-600">student_id.jpg</p>
+                              <Check className="w-6 h-6 text-[var(--brand-accent)] mx-auto" />
+                              <p className="text-sm font-sans text-[var(--brand-text)]">ID uploaded</p>
+                              <p className="text-xs font-sans text-[var(--brand-muted)]">student_id.jpg</p>
                             </div>
                           ) : (
                             <div className="space-y-1">
-                              <p className="text-sm font-sans text-slate-400">Click to upload your student ID</p>
-                              <p className="text-xs font-sans text-slate-600">PNG, JPG up to 5MB (simulated)</p>
+                              <p className="text-sm font-sans text-[var(--brand-muted)]">Click to upload your student ID</p>
+                              <p className="text-xs font-sans text-[var(--brand-subtle)]">PNG, JPG up to 5MB (simulated)</p>
                             </div>
                           )}
                         </div>
@@ -940,9 +940,9 @@ export default function Questionnaire() {
                       {/* Badge Preview */}
                       <motion.div
                         variants={fadeIn}
-                        className="rounded-xl border border-slate-800/60 bg-white/[0.03] p-4"
+                        className="rounded-xl border border-[rgba(255,145,92,0.16)] bg-[rgba(255,145,92,0.05)] p-4"
                       >
-                        <p className="text-xs font-sans text-slate-500 uppercase tracking-wider mb-3">
+                        <p className="text-xs font-sans text-[var(--brand-muted)] uppercase tracking-wider mb-3">
                           Your Profile Badges
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -950,8 +950,8 @@ export default function Questionnaire() {
                             className={cn(
                               'px-3 py-1 rounded-full text-xs font-sans border transition-all duration-300',
                               formData.universityEmail.includes('@')
-                                ? 'border-emerald-800 bg-emerald-950/30 text-emerald-400'
-                                : 'border-slate-800 text-slate-600',
+                                ? 'border-[rgba(255,145,92,0.36)] bg-[rgba(255,145,92,0.12)] text-[var(--brand-accent-soft)]'
+                                : 'border-[rgba(255,145,92,0.16)] text-[var(--brand-subtle)]',
                             )}
                           >
                             {formData.universityEmail.includes('@') ? '&#10003; ' : ''}
@@ -961,14 +961,14 @@ export default function Questionnaire() {
                             className={cn(
                               'px-3 py-1 rounded-full text-xs font-sans border transition-all duration-300',
                               formData.idUploaded
-                                ? 'border-emerald-800 bg-emerald-950/30 text-emerald-400'
-                                : 'border-slate-800 text-slate-600',
+                                ? 'border-[rgba(255,145,92,0.36)] bg-[rgba(255,145,92,0.12)] text-[var(--brand-accent-soft)]'
+                                : 'border-[rgba(255,145,92,0.16)] text-[var(--brand-subtle)]',
                             )}
                           >
                             {formData.idUploaded ? '&#10003; ' : ''}
                             ID Verified
                           </span>
-                          <span className="px-3 py-1 rounded-full text-xs font-sans border border-slate-800 text-slate-600">
+                          <span className="px-3 py-1 rounded-full text-xs font-sans border border-[rgba(255,145,92,0.16)] text-[var(--brand-subtle)]">
                             References
                           </span>
                         </div>
@@ -985,7 +985,7 @@ export default function Questionnaire() {
                         />
                         <label
                           htmlFor="terms"
-                          className="text-xs font-sans text-slate-400 leading-relaxed cursor-pointer"
+                          className="text-xs font-sans text-[var(--brand-muted)] leading-relaxed cursor-pointer"
                         >
                           I agree to the Terms of Service and Privacy Policy. My data will only be
                           used for roommate matching purposes.

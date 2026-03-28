@@ -427,7 +427,7 @@ export function DemoOverlay() {
         className="fixed inset-0 z-[9998] pointer-events-none rounded-xl"
         style={{
           padding: '2.5px',
-          background: 'linear-gradient(90deg, #3b82f6, #8b5cf6, #34d399, #f59e0b, #ec4899, #3b82f6)',
+          background: 'linear-gradient(90deg, #ff935c, #ff7a49, #ffd1b3, #ff935c)',
           backgroundSize: '200% 100%',
           animation: 'demo-border-slide 3s linear infinite',
           WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -439,19 +439,19 @@ export function DemoOverlay() {
       <div
         className="fixed inset-0 z-[9997] pointer-events-none"
         style={{
-          boxShadow: 'inset 0 0 30px rgba(59,130,246,0.08), inset 0 0 60px rgba(139,92,246,0.05), inset 0 0 90px rgba(52,211,153,0.04)',
+          boxShadow: 'inset 0 0 30px rgba(255,145,92,0.08), inset 0 0 60px rgba(255,122,73,0.05), inset 0 0 90px rgba(255,209,179,0.04)',
         }}
       />
 
       {/* ── Badge + Exit ── */}
       <div className="fixed top-24 right-4 z-[10002] flex flex-col items-end gap-2">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-md">
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-sans font-medium text-emerald-400">Demo Active</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[rgba(255,145,92,0.1)] border border-[rgba(255,145,92,0.3)] backdrop-blur-md">
+          <div className="w-2 h-2 rounded-full bg-[var(--brand-accent)] animate-pulse" />
+          <span className="text-xs font-sans font-medium text-[var(--brand-accent)]">Demo Active</span>
         </div>
         <button
           onClick={handleStop}
-          className="px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-sans text-slate-400 hover:text-slate-200 hover:border-slate-500 transition-all backdrop-blur-md cursor-pointer"
+          className="px-3 py-1.5 rounded-full bg-[rgba(22,10,6,0.85)] border border-[rgba(255,145,92,0.22)] text-xs font-sans text-[var(--brand-muted)] hover:text-[var(--brand-text)] hover:border-[rgba(255,145,92,0.4)] transition-all backdrop-blur-md cursor-pointer"
         >
           Exit Demo
         </button>
@@ -466,8 +466,8 @@ export function DemoOverlay() {
             transition={{ type: 'spring', stiffness: 150, damping: 22 }}
             style={{ width: 12, height: 12 }}
           >
-            <div className="w-3 h-3 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50" />
-            <div className="absolute inset-0 w-3 h-3 rounded-full bg-blue-400/40 animate-ping" />
+            <div className="w-3 h-3 rounded-full bg-[var(--brand-accent)] shadow-lg shadow-[rgba(255,145,92,0.45)]" />
+            <div className="absolute inset-0 w-3 h-3 rounded-full bg-[rgba(255,145,92,0.3)] animate-ping" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -483,7 +483,7 @@ export function DemoOverlay() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="w-3 h-3 rounded-full bg-blue-400/40 -translate-x-1/2 -translate-y-1/2" />
+            <div className="w-3 h-3 rounded-full bg-[rgba(255,145,92,0.3)] -translate-x-1/2 -translate-y-1/2" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -504,7 +504,7 @@ export function DemoOverlay() {
               {[0, 1, 2].map((i) => (
                 <motion.div
                   key={i}
-                  className="w-2 h-2 rounded-full bg-slate-500"
+                  className="w-2 h-2 rounded-full bg-[var(--brand-muted)]"
                   animate={{ opacity: [0.3, 1, 0.3] }}
                   transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.3 }}
                 />
@@ -532,7 +532,7 @@ export function DemoOverlay() {
                 {/* Score Ring */}
                 <div className="relative mb-14">
                   <svg width="140" height="140" className="-rotate-90">
-                    <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(148,163,184,0.1)" strokeWidth="6" />
+                    <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,145,92,0.1)" strokeWidth="6" />
                     <motion.circle
                       cx="70" cy="70" r="54" fill="none"
                       stroke="url(#scoreGradient)" strokeWidth="6" strokeLinecap="round"
@@ -542,18 +542,18 @@ export function DemoOverlay() {
                     />
                     <defs>
                       <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#34d399" />
-                        <stop offset="100%" stopColor="#10b981" />
+                        <stop offset="0%" stopColor="#ff935c" />
+                        <stop offset="100%" stopColor="#ff7a49" />
                       </linearGradient>
                     </defs>
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-4xl font-serif font-bold text-slate-100">{scoreValue}%</span>
-                    <span className="text-[10px] font-sans text-slate-500 uppercase tracking-wider">Match</span>
+                    <span className="text-4xl font-serif font-bold text-[var(--brand-text)]">{scoreValue}%</span>
+                    <span className="text-[10px] font-sans text-[var(--brand-muted)] uppercase tracking-wider">Match</span>
                   </div>
                   {scoreValue >= 92 && (
                     <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                      <span className="text-sm font-serif font-semibold text-emerald-400">Excellent Match</span>
+                      <span className="text-sm font-serif font-semibold text-[var(--brand-accent)]">Excellent Match</span>
                     </div>
                   )}
                 </div>
@@ -566,10 +566,10 @@ export function DemoOverlay() {
                       {BARS.map((bar) => (
                         <div key={bar.label}>
                           <div className="flex justify-between text-xs font-sans mb-1">
-                            <span className="text-slate-400">{bar.label}</span>
-                            <span className="text-slate-500">{bar.value}%</span>
+                            <span className="text-[var(--brand-accent-soft)]">{bar.label}</span>
+                            <span className="text-[var(--brand-muted)]">{bar.value}%</span>
                           </div>
-                          <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                          <div className="w-full h-1.5 bg-[rgba(255,145,92,0.14)] rounded-full overflow-hidden">
                             <div
                               className={`h-full rounded-full ${bar.color} transition-all duration-700 ease-out`}
                               style={{ width: `${bar.value}%` }}
@@ -620,9 +620,9 @@ export function DemoOverlay() {
 
                     {/* AI Insight */}
                     <div className="mt-8 w-full max-w-md">
-                      <div className="rounded-xl border border-slate-800/60 bg-white/[0.03] p-5">
-                        <p className="text-xs font-sans text-slate-500 uppercase tracking-wider mb-2">AI Insight</p>
-                        <p className="text-sm font-sans text-slate-300 leading-relaxed italic">
+                      <div className="rounded-xl border border-[rgba(255,145,92,0.18)] bg-[rgba(255,145,92,0.05)] p-5">
+                        <p className="text-xs font-sans text-[var(--brand-muted)] uppercase tracking-wider mb-2">AI Insight</p>
+                        <p className="text-sm font-sans text-[var(--brand-accent-soft)] leading-relaxed italic">
                           "You're both early risers who study at home — the AI paired you because you'll
                           have compatible quiet hours and shared kitchen schedules. Your overlapping
                           budget range of $800–$950 means you can target the same listings."
@@ -630,10 +630,10 @@ export function DemoOverlay() {
                       </div>
 
                       <div className="flex items-center justify-center gap-4 mt-8">
-                        <button onClick={handleWatchAgain} className="px-6 py-2.5 rounded-full border border-slate-700 text-slate-300 text-sm font-sans font-medium hover:bg-white/[0.06] hover:border-slate-500 transition-all cursor-pointer">
+                        <button onClick={handleWatchAgain} className="px-6 py-2.5 rounded-full border border-[rgba(255,145,92,0.22)] text-[var(--brand-text)] text-sm font-sans font-medium hover:bg-[rgba(255,145,92,0.08)] hover:border-[rgba(255,145,92,0.4)] transition-all cursor-pointer">
                           Watch Again
                         </button>
-                        <button onClick={() => { stopDemo(); navigate('/questionnaire') }} className="px-6 py-2.5 rounded-full bg-slate-200 text-slate-900 text-sm font-sans font-semibold hover:bg-white transition-all cursor-pointer">
+                        <button onClick={() => { stopDemo(); navigate('/questionnaire') }} className="px-6 py-2.5 rounded-full bg-[linear-gradient(135deg,var(--brand-accent),var(--brand-accent-strong))] text-[#311207] text-sm font-sans font-semibold hover:brightness-105 transition-all cursor-pointer">
                           Try It Yourself &rarr;
                         </button>
                       </div>

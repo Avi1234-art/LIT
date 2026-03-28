@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import ReactLenis from 'lenis/react'
 import { CharacterV1 } from '@/components/ui/text-scroll-animation'
+import { BrandLogo } from '@/components/BrandLogo'
 
 /* ─── Scroll-animated text section ─── */
 function ScrollText({
@@ -58,7 +59,7 @@ function SubtitleReveal({
 
   return (
     <motion.p
-      className="mt-6 text-lg sm:text-xl font-sans font-light text-slate-400 max-w-2xl text-center"
+      className="mt-6 text-lg sm:text-xl font-sans font-light text-[var(--brand-muted)] max-w-2xl text-center"
       style={{ opacity, y }}
     >
       {text}
@@ -89,16 +90,16 @@ function PipelineStep({
       className="relative pl-12 pb-12 last:pb-0"
     >
       {/* Timeline line */}
-      <div className="absolute left-[18px] top-10 bottom-0 w-px bg-gradient-to-b from-slate-700 to-transparent" />
+      <div className="absolute left-[18px] top-10 bottom-0 w-px bg-gradient-to-b from-[rgba(255,145,92,0.34)] to-transparent" />
       {/* Number dot */}
-      <div className="absolute left-0 top-0 w-9 h-9 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-emerald-400 text-sm font-sans font-semibold">
+      <div className="absolute left-0 top-0 w-9 h-9 rounded-full bg-[rgba(255,145,92,0.1)] border border-[rgba(255,145,92,0.34)] flex items-center justify-center text-[var(--brand-accent)] text-sm font-sans font-semibold">
         {number}
       </div>
-      <h3 className="text-xl font-serif font-semibold text-slate-100 mb-2">{title}</h3>
-      <p className="text-sm font-sans font-light text-slate-400 leading-relaxed max-w-lg">{description}</p>
+      <h3 className="text-xl font-serif font-semibold text-[var(--brand-text)] mb-2">{title}</h3>
+      <p className="text-sm font-sans font-light text-[var(--brand-muted)] leading-relaxed max-w-lg">{description}</p>
       {detail && (
-        <div className="mt-3 px-4 py-3 rounded-lg bg-white/[0.03] border border-slate-800/60">
-          <p className="text-xs font-sans text-slate-500 italic leading-relaxed">{detail}</p>
+        <div className="mt-3 px-4 py-3 rounded-lg bg-[rgba(255,145,92,0.05)] border border-[rgba(255,145,92,0.16)]">
+          <p className="text-xs font-sans text-[var(--brand-muted)] italic leading-relaxed">{detail}</p>
         </div>
       )}
     </motion.div>
@@ -121,16 +122,16 @@ function RatingCard({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.5 }}
-      className="bg-white/[0.03] rounded-xl p-5 border border-slate-800/60 text-center"
+      className="brand-panel rounded-xl p-5 text-center"
     >
       <div className="flex justify-center gap-1 mb-3">
         {[...Array(5)].map((_, i) => (
-          <span key={i} className={`text-lg ${i < stars ? 'text-amber-400' : 'text-slate-700'}`}>
+          <span key={i} className={`text-lg ${i < stars ? 'text-[var(--brand-accent)]' : 'text-[var(--brand-subtle)]'}`}>
             &#9733;
           </span>
         ))}
       </div>
-      <p className="text-sm font-sans text-slate-400">{label}</p>
+      <p className="text-sm font-sans text-[var(--brand-muted)]">{label}</p>
     </motion.div>
   )
 }
@@ -153,11 +154,11 @@ function AudienceCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ delay, duration: 0.5 }}
-      className="bg-white/[0.03] rounded-xl p-6 border border-slate-800/60 hover:border-slate-700/60 hover:bg-white/[0.05] transition-all duration-300"
+      className="brand-panel brand-panel-hover rounded-xl p-6 transition-all duration-300"
     >
       <span className="text-3xl mb-4 block">{icon}</span>
-      <h4 className="font-serif font-semibold text-slate-200 mb-2">{title}</h4>
-      <p className="text-sm font-sans font-light text-slate-500 leading-relaxed">{description}</p>
+      <h4 className="font-serif font-semibold text-[var(--brand-text)] mb-2">{title}</h4>
+      <p className="text-sm font-sans font-light text-[var(--brand-muted)] leading-relaxed">{description}</p>
     </motion.div>
   )
 }
@@ -168,12 +169,12 @@ function AudienceCard({
 export default function HowItWorks() {
   return (
     <ReactLenis root>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 text-slate-100 font-serif">
+      <div className="brand-theme min-h-screen text-[var(--brand-text)] font-serif">
 
         {/* ═══ HERO SCROLL ANIMATION ═══ */}
         <ScrollText
           text="smarter matches "
-          charClassName="text-emerald-400"
+          charClassName="text-[var(--brand-accent)]"
           subtitle="Our AI doesn't just match randomly. It learns patterns, weighs 12+ dimensions of compatibility, and gets smarter with every match."
         />
 
@@ -229,7 +230,7 @@ export default function HowItWorks() {
         {/* ═══ RATING SCROLL ANIMATION ═══ */}
         <ScrollText
           text="your rating matters "
-          charClassName="text-amber-400"
+          charClassName="text-[var(--brand-accent-soft)]"
           subtitle="Like Airbnb, both roommates rate each other. Your rating is your reputation — and it directly influences your future matches."
         />
 
@@ -338,7 +339,7 @@ export default function HowItWorks() {
         {/* ═══ BUILT FOR SCROLL ANIMATION ═══ */}
         <ScrollText
           text="built for students "
-          charClassName="text-blue-400"
+          charClassName="text-[var(--brand-accent)]"
           subtitle="Whether you're heading to co-op, an internship, exchange, or just need a place for the year — we've got you covered."
         />
 
@@ -429,7 +430,7 @@ export default function HowItWorks() {
                 </Link>
                 <Link
                   to="/"
-                  className="px-8 py-3 rounded-full border border-slate-700 text-slate-400 font-sans text-sm font-medium hover:border-slate-500 hover:text-slate-300 transition-all"
+                  className="brand-subtle-button px-8 py-3 rounded-full font-sans text-sm font-medium"
                 >
                   Back to Home
                 </Link>
@@ -439,20 +440,20 @@ export default function HowItWorks() {
         </section>
 
         {/* ═══ FOOTER ═══ */}
-        <footer className="relative z-10 border-t border-slate-800/60 py-10 px-6">
-          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-sm font-serif font-semibold text-slate-400">RoomieMatch</span>
-            <div className="flex items-center gap-6 text-sm font-sans font-light text-slate-600">
-              <Link to="/" className="hover:text-slate-400 transition-colors">Home</Link>
-              <Link to="/questionnaire" className="hover:text-slate-400 transition-colors">Find Roommates</Link>
-              <Link to="/how-it-works" className="hover:text-slate-400 transition-colors">How It Works</Link>
-              <Link to="/reviews" className="hover:text-slate-400 transition-colors">Reviews</Link>
-            </div>
-            <p className="text-xs font-sans text-slate-700">
-              &copy; 2026 RoomieMatch. Academic Prototype.
-            </p>
+      <footer className="relative z-10 border-t border-[rgba(255,145,92,0.16)] py-10 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <BrandLogo className="h-9" />
+          <div className="flex items-center gap-6 text-sm font-sans font-light text-[var(--brand-muted)]">
+            <Link to="/" className="hover:text-[var(--brand-text)] transition-colors">Home</Link>
+            <Link to="/questionnaire" className="hover:text-[var(--brand-text)] transition-colors">Find Roommates</Link>
+            <Link to="/how-it-works" className="hover:text-[var(--brand-text)] transition-colors">How It Works</Link>
+            <Link to="/reviews" className="hover:text-[var(--brand-text)] transition-colors">Reviews</Link>
           </div>
-        </footer>
+          <p className="text-xs font-sans text-[var(--brand-subtle)]">
+            &copy; 2026 Dwell. Academic Prototype.
+          </p>
+        </div>
+      </footer>
       </div>
     </ReactLenis>
   )
